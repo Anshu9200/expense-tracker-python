@@ -4,7 +4,7 @@ import os
 FILE_NAME = "expenses.csv"
 
 
-# Create CSV file with header if it doesn't exist
+# Create CSV file with header if it does not exist
 def initialize_file():
     if not os.path.exists(FILE_NAME):
         with open(FILE_NAME, "w", newline="") as file:
@@ -12,7 +12,7 @@ def initialize_file():
             writer.writerow(["Date", "Category", "Amount"])
 
 
-# Add a new expense
+# Add Expense
 def add_expense():
     date = input("Enter Date (DD-MM-YYYY): ")
     category = input("Enter Category: ")
@@ -22,46 +22,45 @@ def add_expense():
             amount = float(input("Enter Amount: "))
             break
         except ValueError:
-            print("Invalid amount! Please enter a numeric value.")
+            print("Invalid amount! Enter numbers only.")
 
     with open(FILE_NAME, "a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow([date, category, amount])
 
-    print("\nExpense added successfully!\n")
+    print("\nExpense added successfully!")
 
 
-# Display all expenses
+# View All Expenses
 def view_expenses():
     try:
         with open(FILE_NAME, "r", newline="") as file:
             reader = csv.reader(file)
 
-            # Skip header
-            next(reader, None)
+            next(reader, None)  # Skip header
 
-            rows = list(reader)
+            records = list(reader)
 
-            if not rows:
-                print("\nNo expense records found.\n")
+            if not records:
+                print("\nNo expense records found.")
                 return
 
             print("\n========== Expense Records ==========")
             print(f"{'Date':<15}{'Category':<20}{'Amount':>10}")
             print("-" * 45)
 
-            for row in rows:
+            for row in records:
                 print(f"{row[0]:<15}{row[1]:<20}{row[2]:>10}")
 
             print("-" * 45)
 
     except FileNotFoundError:
-        print("\nNo expense records found.\n")
+        print("\nNo expense records found.")
 
 
-# Search expenses by category
+# Search Expense by Category
 def search_expense():
-    category = input("Enter Category to search: ").strip().lower()
+    category = input("Enter category to search: ").lower()
 
     try:
         with open(FILE_NAME, "r", newline="") as file:
@@ -71,7 +70,7 @@ def search_expense():
 
             found = False
 
-            print("\nMatching Expenses")
+            print("\n========== Search Results ==========")
             print(f"{'Date':<15}{'Category':<20}{'Amount':>10}")
             print("-" * 45)
 
@@ -87,7 +86,7 @@ def search_expense():
         print("No expense records found.")
 
 
-# Calculate total expenses
+# Calculate Total Expense
 def total_expense():
     total = 0
 
@@ -100,45 +99,7 @@ def total_expense():
             for row in reader:
                 total += float(row[2])
 
-        print(f"\nTotal Expenses = {total:.2f}\n")
+            print(f"\nTotal Expense: {total:.2f}")
 
     except FileNotFoundError:
         print("No expense records found.")
-
-
-# Main Menu
-def main():
-    initialize_file()
-
-    while True:
-        print("\n========== Expense Tracker ==========")
-        print("1. Add Expense")
-        print("2. View Expenses")
-        print("3. Search by Category")
-        print("4. View Total Expenses")
-        print("5. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == "1":
-            add_expense()
-
-        elif choice == "2":
-            view_expenses()
-
-        elif choice == "3":
-            search_expense()
-
-        elif choice == "4":
-            total_expense()
-
-        elif choice == "5":
-            print("\nThank you for using Expense Tracker!")
-            break
-
-        else:
-            print("Invalid choice! Please try again.")
-
-
-if __name__ == "__main__":
-    main()
